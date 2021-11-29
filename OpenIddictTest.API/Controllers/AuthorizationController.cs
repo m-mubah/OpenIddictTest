@@ -24,7 +24,9 @@ namespace OpenIddictTest.API.Controllers
         [HttpPost("~/connect/token"), Produces("application/json")]
         public async Task<IActionResult> Exchange()
         {
-            var request = HttpContext.GetOpenIddictServerRequest();
+            var request = HttpContext.GetOpenIddictServerRequest() ??
+                throw new InvalidOperationException("The OpenID Connect request cannot be retrieved.");
+
             if (request.IsPasswordGrantType())
             {
                 var user = await userManager.FindByNameAsync(request.Username);
